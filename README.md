@@ -20,3 +20,4 @@ Future improvements:
 - Default file if none specified
 - Option to use another algorithm
 - Multithreading to handle larger wordlist files quickly
+- Add chrono + options to print it
