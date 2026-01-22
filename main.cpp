@@ -26,12 +26,17 @@ int main(int argc, char **argv) {
             
             if (!line.empty() && line.back() == '\r') line.pop_back();
             
-            unsigned char computedHash[SHA256_DIGEST_LENGTH];
+            unsigned char computedHash[config.getAlgoDigestLength()];
+
             // Hash the line
-            SHA256(reinterpret_cast<const unsigned char*>(line.c_str()), line.size(), computedHash);
-            
+            if (config.getAlgo() == Algo::SHA256) {
+               
+                SHA256(reinterpret_cast<const unsigned char*>(line.c_str()), line.size(), computedHash);
+            } else if (config.getAlgo() == Algo::SHA1) {
+                SHA1(reinterpret_cast<const unsigned char*>(line.c_str()), line.size(), computedHash);
+            }
             // Comparaison
-            if (std::memcmp(computedHash, config.getHash(), SHA256_DIGEST_LENGTH) == 0) {
+            if (std::memcmp(computedHash, config.getHash(), config.getAlgoDigestLength()) == 0) {
                 cout << "Found! The password is: " << line << endl;
                 return (0);
             }

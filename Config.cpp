@@ -12,7 +12,7 @@ std::fstream    openWordsList(std::string path) {
     return WordsList;
 }
 
-Config::Config(int argc, char **argv) {
+Config::Config(int argc, char **argv): _algorithm(Algo::SHA256) {
 
     _hashLength = 0;
     std::vector<std::string> args(argv + 1, argv + argc);
@@ -30,7 +30,23 @@ Config::Config(int argc, char **argv) {
         } else if (args[i] == "-h" || args[i] == "--help") {
             _help = true;
             return ;
-        } else {
+        // Option to choose an alogrithm
+        } else if (args[i] == "-a" || args[i] == "--algo") {
+            if (i + 1 < args.size()) {
+                if (args[++i] == "SHA256") {
+                    _algorithm = Algo::SHA256;
+                    _algoDigestLength = SHA256_DIGEST_LENGTH;
+                } else if (args[i] == "SHA1") {
+                    _algorithm = Algo::SHA1;
+                    _algoDigestLength = SHA_DIGEST_LENGTH;
+                } else {
+                    throw std::runtime_error("Unknown algorithm");
+                }
+            } else {
+                throw std::runtime_error("Option -a requires an argument");
+            }
+        }
+        else {
             // retrieve the hash given
             if (_hashLength) {
                 _help = true;
@@ -59,9 +75,11 @@ Config::Config(int argc, char **argv) {
     // If no hash given: send an error
     if (!_hashLength)
         throw std::runtime_error("Missing arguments"); 
+    
     // Check if the hash size and the choosed algo correponds
-    // TODO: adapt to the choosen algorithm
-    if (_hashLength != SHA256_DIGEST_LENGTH) {
+    if (_algorithm == Algo::SHA256 && _hashLength != SHA256_DIGEST_LENGTH) {
+            throw std::runtime_error("Hash buffer size mismatch!");
+    } else if (_algorithm == Algo::SHA1 && _hashLength != SHA_DIGEST_LENGTH) {
             throw std::runtime_error("Hash buffer size mismatch!");
     }
 }
@@ -78,4 +96,10 @@ unsigned char *Config::getHash() {
 }
 bool    Config::getHelp() {
     return _help;
+}
+Algo    Config::getAlgo() {
+    return _algorithm;
+}
+size_t  Config::getAlgoDigestLength() {
+    return _algoDigestLength;
 }
