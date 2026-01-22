@@ -1,13 +1,15 @@
-**Simple C++ SHA-256 Hash Cracker**
+**Simple C++ Hash Cracker**
 
 This project is designed for educational purposes to demonstrate how password hashing works and why weak passwords are easy to crack.
+For the moment, it can handle SHA256 and SHA1 hashed words. 
 
 **Usage:**
 
-    ./a.out <wordlist_path> <target_hash>
+    make
+    ./passwd_hash_cracker <wordlist_path> <target_hash>
 Example:
 
-    ./hash_cracker rockyou.txt 5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8 [-f filePath] [-h]
+    ./passwd_hash_cracker 5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8 [-f filePath] [-h]
 
 **How it works:**
 1. The program takes a target hash.
@@ -19,8 +21,9 @@ Example:
 **Options**
 - --file (-f): specify a file path. "rockyou.txt" is used if none specified
 - --help (-h): prints the man
+- --algo (-a): choose algorithm. SHA256 is the default algorithm
 
 **Future improvements:**
-- Option to use another algorithm
+- Other algorithm
 - Multithreading to handle larger wordlist files quickly
 - Add chrono + options to print it
