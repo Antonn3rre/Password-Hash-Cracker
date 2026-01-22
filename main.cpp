@@ -8,6 +8,7 @@ void    printHelp() {
     "Options:\n"
     " -f or --file\tspecify a wordlist file\n"
     " -h or --help\tprint the man\n"
+    " -a or --algo\tchoose algo (SHA256 or SHA1)\n"
     "\n";
 }
 
