@@ -1,6 +1,8 @@
 #include "Config.hpp"
 #include <vector>
 #include <stdexcept>
+#include <iostream>
+#include <bits/stdc++.h>
 
 std::fstream    openWordsList(std::string path) {
     std::fstream WordsList(path);
@@ -45,6 +47,18 @@ Config::Config(int argc, char **argv): _algorithm(Algo::SHA256) {
             } else {
                 throw std::runtime_error("Option -a requires an argument");
             }
+        // Option to choose number of thread to use
+        } else if (args[i] == "-t" || args[i] == "--thread") {
+            if (i + 1 < args.size()) {
+                if (all_of(args[++i].begin(), args[i].end(), ::isdigit) && args[i].size() < 5) {
+                    std::stringstream    stream(args[i]);
+                    stream >> _thread;
+                } else {
+                    throw std::runtime_error("Invalid number of thread");
+                }
+            } else {
+                throw std::runtime_error("Option -t requires an argument");
+            }
         }
         else {
             // retrieve the hash given
@@ -87,19 +101,52 @@ Config::Config(int argc, char **argv): _algorithm(Algo::SHA256) {
 Config::~Config() {
     _wordList.close();
 }
+Config::Config(Config &other) {
+
+    this->_help = other._help;
+    this->_algorithm = other._algorithm;
+    this->_algoDigestLength = other._algoDigestLength;
+    this->_thread = other._thread;
+    this->_hashLength = other._hashLength;
+
+    std::memcpy(this->_hash, other._hash, MAX_HASH_SIZE);
+
+}
+Config &Config::operator=(Config &other) {
+    if (this == &other) {
+        return *this;
+    }
+
+    if (this->_wordList.is_open()) {
+        this->_wordList.close();
+    }
+
+    this->_help = other._help;
+    this->_algorithm = other._algorithm;
+    this->_algoDigestLength = other._algoDigestLength;
+    this->_thread = other._thread;
+    this->_hashLength = other._hashLength;
+
+    std::memcpy(this->_hash, other._hash, MAX_HASH_SIZE);
+
+    return *this;
+}
 
 std::fstream &Config::getWordList() {
     return _wordList;
 }
-unsigned char *Config::getHash() {
+const unsigned char *Config::getHash() const {
     return _hash;
 }
-bool    Config::getHelp() {
+const bool    Config::getHelp() const {
     return _help;
 }
-Algo    Config::getAlgo() {
+const Algo    Config::getAlgo() const {
     return _algorithm;
 }
-size_t  Config::getAlgoDigestLength() {
+const size_t  Config::getAlgoDigestLength() const {
     return _algoDigestLength;
+}
+const size_t  Config::getThread() const {
+    return _thread;
 }

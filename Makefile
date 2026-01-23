@@ -5,7 +5,7 @@ FGLAGS = -Wall -Wextra -Werror
 LIBS = -lcrypto
 RM = rm -rf
 
-SRCS = main.cpp Config.cpp
+SRCS = main.cpp Config.cpp HashEngine.cpp SafeQueue.cpp
 OBJS = $(SRCS:.cpp=.o)
 
 %.o: %.cpp

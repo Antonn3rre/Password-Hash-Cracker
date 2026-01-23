@@ -19,11 +19,14 @@ class Config {
     public:
         Config(int argc, char **argv);
         ~Config();
+        Config &operator=(Config &);
+        Config(Config &);
         std::fstream &getWordList();
-        unsigned char *getHash();
-        bool    getHelp();
-        Algo    getAlgo();
-        size_t  getAlgoDigestLength();
+        const unsigned char *getHash() const;
+        const bool    getHelp() const;
+        const Algo    getAlgo() const;
+        const size_t  getAlgoDigestLength() const;
+        const size_t  getThread() const;
     
     private:
         std::fstream _wordList;
@@ -32,7 +35,7 @@ class Config {
         bool    _help;
         Algo _algorithm;
         size_t  _algoDigestLength;
-        // TO ADD: multithreading
+        size_t  _thread;
 };
 
 #endif

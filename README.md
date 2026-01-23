@@ -6,10 +6,10 @@ For the moment, it can handle SHA256 and SHA1 hashed words.
 **Usage:**
 
     make
-    ./passwd_hash_cracker <wordlist_path> <target_hash>
+    ./passwd_hash_cracker <target_hash>
 Example:
 
-    ./passwd_hash_cracker 5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8 [-f filePath] [-h]
+    ./passwd_hash_cracker 5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8 [-f filePath] [-h] [-a algo] [-t threadNum]
 
 **How it works:**
 1. The program takes a target hash.
@@ -22,6 +22,7 @@ Example:
 - --file (-f): specify a file path. "rockyou.txt" is used if none specified
 - --help (-h): prints the man
 - --algo (-a): choose algorithm. SHA256 is the default algorithm
+- --thread (-t): choose the number of thread to use
 
 **Future improvements:**
 - Other algorithm
