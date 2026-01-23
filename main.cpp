@@ -1,6 +1,7 @@
 #include "Config.hpp"
 #include <openssl/sha.h>
 #include <cstring>
+#include "HashEngine.hpp"
 using namespace std;
 
 void    printHelp() {
@@ -9,6 +10,7 @@ void    printHelp() {
     " -f or --file\tspecify a wordlist file\n"
     " -h or --help\tprint the man\n"
     " -a or --algo\tchoose algo (SHA256 or SHA1)\n"
+    " -t or --thread\tchoose the number of thread to use\n"
     "\n";
 }
 
@@ -16,34 +18,13 @@ int main(int argc, char **argv) {
     
     try {
         Config  config(argc, argv);
-        string line;
 
         if (config.getHelp()) {
             printHelp();
             return (0);
         }
-
-        while (getline(config.getWordList(), line)) {
-            
-            if (!line.empty() && line.back() == '\r') line.pop_back();
-            
-            unsigned char computedHash[config.getAlgoDigestLength()];
-
-            // Hash the line
-            if (config.getAlgo() == Algo::SHA256) {
-               
-                SHA256(reinterpret_cast<const unsigned char*>(line.c_str()), line.size(), computedHash);
-            } else if (config.getAlgo() == Algo::SHA1) {
-                SHA1(reinterpret_cast<const unsigned char*>(line.c_str()), line.size(), computedHash);
-            }
-            // Comparaison
-            if (std::memcmp(computedHash, config.getHash(), config.getAlgoDigestLength()) == 0) {
-                cout << "Found! The password is: " << line << endl;
-                return (0);
-            }
-        }
-        cout << "Not found :(\n";
-        return 0;
+        HashEngine  engine;
+        engine.run(config);
     } catch (std::exception &e) {
         std::cout << e.what() << std::endl;
         return 0;
